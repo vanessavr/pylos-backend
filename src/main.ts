@@ -4,6 +4,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { ValidationPipe } from '@nestjs/common'
 import cookieParser from 'cookie-parser'
 
+const port = process.env.PORT || 3000
+console.log(`Launching NestJS app on port ${port}, URL: http://0.0.0.0:${port}`)
+
 async function bootstrap() {
     const app = await NestFactory.create(AppModule)
 
@@ -21,7 +24,7 @@ async function bootstrap() {
 
     app.use(cookieParser())
 
-    await app.listen(3000)
+    await app.listen(port)
 }
 
 bootstrap()
