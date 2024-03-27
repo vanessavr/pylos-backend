@@ -7,6 +7,11 @@ import { JwtService } from '@nestjs/jwt'
 import { Response } from 'express'
 import { PrismaService } from 'src/prisma/prisma.service'
 
+interface ExtendedResponse extends Response {
+    cookie(name: string, value: any, options?: any): any
+    clearCookie(name: string, options?: any): any
+}
+
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -18,7 +23,7 @@ export class AuthController {
     ) {}
 
     @Post('login')
-    async login(@Res({ passthrough: true }) res: Response, @Body() loginAuthDto: LoginAuthDto) {
+    async login(@Res({ passthrough: true }) res: ExtendedResponse, @Body() loginAuthDto: LoginAuthDto) {
         const { nombre, respuestaSeguridad } = await loginAuthDto
 
         const findUser = await this.prisma.usuario.findFirst({ where: { nombre: nombre, respuestaSeguridad: respuestaSeguridad } })
@@ -46,7 +51,7 @@ export class AuthController {
     }
 
     @Post('logout')
-    async logout(@Res({ passthrough: true }) res: Response) {
+    async logout(@Res({ passthrough: true }) res: ExtendedResponse) {
         // Eliminar la cookie que contiene el token de acceso
         res.clearCookie('accessToken')
 
