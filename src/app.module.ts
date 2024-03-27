@@ -9,7 +9,7 @@ import { RespuestaPruebaDiagnosticaModule } from './respuesta-prueba-diagnostica
 import { AuthModule } from './auth/auth.module'
 import { PrismaModule } from './prisma/prisma.module'
 
-// Esto es un cambio
+// Esto es otro cambio
 @Module({
     imports: [UsuarioModule, PreguntaSeguridadModule, PreguntaPruebaDiagnosticaModule, OpcionPruebaDiagnosticaModule, RespuestaPruebaDiagnosticaModule, AuthModule, PrismaModule],
     controllers: [AppController],
