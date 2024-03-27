@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PreguntaSeguridad {
+  id                        String                          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pregunta                  String    
+  usuario                   Usuario[]           
+  createdAt                 DateTime?                       @default(now())
+  updatedAt                 DateTime?                       @updatedAt
+}
+
+model PreguntaPruebaDiagnostica {
+  id                        String                          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pregunta                  String    
+  opcionPruebaDiagnostica   OpcionPruebaDiagnostica[]           
+  createdAt                 DateTime?                       @default(now())
+  updatedAt                 DateTime?                       @updatedAt
+}
+
+model OpcionPruebaDiagnostica {
+  id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  opcion                      String    
+  esOpcionCorrecta            Boolean    
+  preguntaPruebaDiagnosticaId String                        @unique @db.Uuid
+  preguntaPruebaDiagnostica   PreguntaPruebaDiagnostica     @relation(fields: [preguntaPruebaDiagnosticaId], references: [id])
+  respuestaPruebaDiagnostica  RespuestaPruebaDiagnostica[]
+  createdAt                   DateTime?                     @default(now())
+  updatedAt                   DateTime?                     @updatedAt
+}
+
+model Usuario {
+  id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre                      String                        @db.VarChar(60)
+  edad                        Int                           @db.Integer
+  grado                       String                        @db.VarChar(2)
+  colegio                     String                        @db.VarChar(60)
+  preguntaSeguridadId         String                        @db.Uuid
+  preguntaSeguridad           PreguntaSeguridad             @relation(fields: [preguntaSeguridadId], references: [id])
+  respuestaSeguridad          String             
+  respuestaPruebaDiagnostica  RespuestaPruebaDiagnostica[]
+  createdAt                   DateTime?                     @default(now())
+  updatedAt                   DateTime?                     @updatedAt
+}
+
+model RespuestaPruebaDiagnostica {
+  id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId                   String                        @unique @db.Uuid
+  usuario                     Usuario                       @relation(fields: [usuarioId], references: [id])
+  opcionPruebaDiagnosticaId   String                        @unique @db.Uuid
+  opcionPruebaDiagnostica     OpcionPruebaDiagnostica       @relation(fields: [opcionPruebaDiagnosticaId], references: [id])
+  createdAt                   DateTime?                     @default(now())
+  updatedAt                   DateTime?                     @updatedAt
+}
+
