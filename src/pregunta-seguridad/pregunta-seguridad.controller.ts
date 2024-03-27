@@ -8,8 +8,8 @@ import { AuthGuard } from 'src/auth/jwt-auth.guard'
 
 @ApiTags('Pregunta de seguridad')
 @Controller('pregunta-seguridad')
-// @ApiBearerAuth()
-// @UseGuards(AuthGuard)
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 export class PreguntaSeguridadController {
     constructor(private readonly preguntaSeguridadService: PreguntaSeguridadService) {}
 
