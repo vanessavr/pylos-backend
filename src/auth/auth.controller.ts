@@ -42,12 +42,12 @@ export class AuthController {
             const token = this.jwtService.sign(payload)
 
             // Set the JWT token as a cookie in the response
-            res.cookie('accessToken', token, {
-                domain: process.env.NEXTJS_PUBLIC_DOMAIN, // Use the correct frontend domain here
-                sameSite: 'none',
-                httpOnly: true,
-                secure: true,
-            })
+            // res.cookie('accessToken', token, {
+            //     domain: process.env.NEXTJS_PUBLIC_DOMAIN, // Use the correct frontend domain here
+            //     sameSite: 'none',
+            //     httpOnly: true,
+            //     secure: true,
+            // })
 
             return { user: findUser, token }
         }
