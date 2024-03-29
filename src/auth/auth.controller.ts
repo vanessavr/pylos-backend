@@ -18,15 +18,13 @@ export class AuthController {
     constructor(
         private jwtService: JwtService,
         private readonly prisma: PrismaService,
-        private readonly authService: AuthService,
-        private readonly usuarioService: UsuarioService,
     ) {}
 
     @Post('login')
     async login(@Res({ passthrough: true }) res: ExtendedResponse, @Body() loginAuthDto: LoginAuthDto) {
         const { nombre, respuestaSeguridad } = await loginAuthDto
 
-        const findUser = await this.prisma.usuario.findFirst({ where: { nombre: nombre, respuestaSeguridad: respuestaSeguridad } })
+        const findUser = await this.prisma.usuario.findFirst({ where: { nombre: nombre.toUpperCase(), respuestaSeguridad: respuestaSeguridad.toUpperCase() } })
 
         let payload = {}
 
@@ -37,6 +35,8 @@ export class AuthController {
                 edad: findUser.edad,
                 grado: findUser.grado,
                 colegio: findUser.colegio,
+                preguntaSeguridadId: findUser.preguntaSeguridadId,
+                respuestaSeguridad: findUser.respuestaSeguridad,
             }
 
             const token = this.jwtService.sign(payload)
