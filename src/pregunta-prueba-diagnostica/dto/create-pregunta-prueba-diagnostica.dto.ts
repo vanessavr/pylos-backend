@@ -7,4 +7,8 @@ export class CreatePreguntaPruebaDiagnosticaDto {
     @ApiProperty()
     @IsNotEmpty()
     pregunta: string
+
+    @ApiProperty()
+    @IsNotEmpty()
+    esPreguntaCerrada: boolean
 }

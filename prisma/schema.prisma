@@ -25,6 +25,7 @@ model PreguntaSeguridad {
 model PreguntaPruebaDiagnostica {
   id                        String                          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   pregunta                  String    
+  esPreguntaCerrada         Boolean?                        @default(true)
   opcionPruebaDiagnostica   OpcionPruebaDiagnostica[]           
   createdAt                 DateTime?                       @default(now())
   updatedAt                 DateTime?                       @updatedAt
@@ -34,7 +35,7 @@ model OpcionPruebaDiagnostica {
   id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   opcion                      String    
   esOpcionCorrecta            Boolean    
-  preguntaPruebaDiagnosticaId String                        @unique @db.Uuid
+  preguntaPruebaDiagnosticaId String                        @db.Uuid
   preguntaPruebaDiagnostica   PreguntaPruebaDiagnostica     @relation(fields: [preguntaPruebaDiagnosticaId], references: [id])
   respuestaPruebaDiagnostica  RespuestaPruebaDiagnostica[]
   createdAt                   DateTime?                     @default(now())
@@ -57,6 +58,7 @@ model Usuario {
 
 model RespuestaPruebaDiagnostica {
   id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  respuesta                   String?
   usuarioId                   String                        @unique @db.Uuid
   usuario                     Usuario                       @relation(fields: [usuarioId], references: [id])
   opcionPruebaDiagnosticaId   String                        @unique @db.Uuid

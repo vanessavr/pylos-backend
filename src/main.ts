@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { ValidationPipe } from '@nestjs/common'
 import cookieParser from 'cookie-parser'
 
+process.env.TZ = 'America/Bogota'
 const port = process.env.PORT || 3000
 console.log(`Launching NestJS app on port ${port}, URL: http://0.0.0.0:${port}`)
 
