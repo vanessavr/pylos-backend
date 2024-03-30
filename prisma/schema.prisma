@@ -14,9 +14,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model PreguntaSeguridad {
+model Mascota {
   id                        String                          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  pregunta                  String    
+  mascota                   String    
+  foto                      String    
   usuario                   Usuario[]           
   createdAt                 DateTime?                       @default(now())
   updatedAt                 DateTime?                       @updatedAt
@@ -45,12 +46,13 @@ model OpcionPruebaDiagnostica {
 model Usuario {
   id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nombre                      String                        @db.VarChar(60)
+  nombreUsuario               String                        @db.VarChar(15)
   edad                        Int                           @db.Integer
   grado                       String                        @db.VarChar(2)
   colegio                     String                        @db.VarChar(60)
-  preguntaSeguridadId         String                        @db.Uuid
-  preguntaSeguridad           PreguntaSeguridad             @relation(fields: [preguntaSeguridadId], references: [id])
-  respuestaSeguridad          String             
+  mascotaId                   String                        @db.Uuid
+  mascota                     Mascota                       @relation(fields: [mascotaId], references: [id])
+  mascotaNombre               String             
   respuestaPruebaDiagnostica  RespuestaPruebaDiagnostica[]
   createdAt                   DateTime?                     @default(now())
   updatedAt                   DateTime?                     @updatedAt
