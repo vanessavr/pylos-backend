@@ -3,6 +3,8 @@ import { AppModule } from './app.module'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { ValidationPipe } from '@nestjs/common'
 import cookieParser from 'cookie-parser'
+import express from 'express'
+import { join } from 'path'
 
 process.env.TZ = 'America/Bogota'
 const port = process.env.PORT || 3000
@@ -22,6 +24,8 @@ async function bootstrap() {
         origin: process.env.NEXTJS_PUBLIC_URL,
         credentials: true,
     })
+
+    app.use('/uploads', express.static(join(__dirname, '..', 'uploads')))
 
     app.use(cookieParser())
 

@@ -7,8 +7,6 @@ import { AuthGuard } from 'src/auth/jwt-auth.guard'
 
 @ApiTags('Mascota')
 @Controller('mascota')
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
 export class MascotaController {
     constructor(private readonly mascotaService: MascotaService) {}
 
@@ -27,11 +25,15 @@ export class MascotaController {
         return this.mascotaService.findOne(id)
     }
 
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateMascotaDto: UpdateMascotaDto) {
         return this.mascotaService.update(id, updateMascotaDto)
     }
 
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.mascotaService.remove(id)
