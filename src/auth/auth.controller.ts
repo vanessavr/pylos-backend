@@ -21,9 +21,9 @@ export class AuthController {
 
     @Post('login')
     async login(@Res({ passthrough: true }) res: ExtendedResponse, @Body() loginAuthDto: LoginAuthDto) {
-        const { nombre, respuestaSeguridad } = await loginAuthDto
+        const { nombreUsuario, mascotaNombre } = await loginAuthDto
 
-        const findUser = await this.prisma.usuario.findFirst({ where: { nombre: nombre.toUpperCase(), respuestaSeguridad: respuestaSeguridad.toUpperCase() } })
+        const findUser = await this.prisma.usuario.findFirst({ where: { nombreUsuario: nombreUsuario.toUpperCase(), mascotaNombre: mascotaNombre.toUpperCase() } })
 
         let payload = {}
 
@@ -31,11 +31,12 @@ export class AuthController {
             payload = {
                 id: findUser.id,
                 nombre: findUser.nombre,
+                nombreUsuario: findUser.nombreUsuario,
                 edad: findUser.edad,
                 grado: findUser.grado,
                 colegio: findUser.colegio,
-                preguntaSeguridadId: findUser.preguntaSeguridadId,
-                respuestaSeguridad: findUser.respuestaSeguridad,
+                mascotaId: findUser.mascotaId,
+                mascotaNombre: findUser.mascotaNombre,
             }
 
             const token = this.jwtService.sign(payload)
@@ -59,11 +60,12 @@ export class AuthController {
         const createdUser = await this.prisma.usuario.create({
             data: {
                 nombre: registroAuthDto.nombre.toUpperCase(),
+                nombreUsuario: registroAuthDto.nombreUsuario.toUpperCase(),
                 grado: registroAuthDto.grado,
                 edad: +registroAuthDto.edad,
                 colegio: registroAuthDto.colegio.toUpperCase(),
-                preguntaSeguridadId: registroAuthDto.preguntaSeguridadId,
-                respuestaSeguridad: registroAuthDto.respuestaSeguridad.toUpperCase(),
+                mascotaId: registroAuthDto.mascotaId,
+                mascotaNombre: registroAuthDto.mascotaNombre.toUpperCase(),
             },
         })
 
@@ -76,8 +78,8 @@ export class AuthController {
                 edad: createdUser.edad,
                 grado: createdUser.grado,
                 colegio: createdUser.colegio,
-                preguntaSeguridadId: createdUser.preguntaSeguridadId,
-                respuestaSeguridad: createdUser.respuestaSeguridad,
+                mascotaId: createdUser.mascotaId,
+                mascotaNombre: createdUser.mascotaNombre,
             }
 
             const token = this.jwtService.sign(payload)

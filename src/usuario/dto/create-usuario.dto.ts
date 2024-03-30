@@ -10,6 +10,10 @@ export class CreateUsuarioDto {
 
     @ApiProperty()
     @IsNotEmpty()
+    nombreUsuario: string
+
+    @ApiProperty()
+    @IsNotEmpty()
     edad: number
 
     @ApiProperty()
@@ -22,9 +26,9 @@ export class CreateUsuarioDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    preguntaSeguridadId: string
+    mascotaId: string
 
     @ApiProperty()
     @IsNotEmpty()
-    respuestaSeguridad: string
+    mascotaNombre: string
 }
