@@ -1,11 +1,10 @@
 import { Controller, Post, Body, Res } from '@nestjs/common'
-import { AuthService } from './auth.service'
 import { LoginAuthDto } from './dto/login-auth.dto'
 import { ApiTags } from '@nestjs/swagger'
-import { UsuarioService } from 'src/usuario/usuario.service'
 import { JwtService } from '@nestjs/jwt'
 import { Response } from 'express'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { RegistroAuthDto } from './dto/registro-auth.dto'
 
 interface ExtendedResponse extends Response {
     cookie(name: string, value: any, options?: any): any
@@ -50,6 +49,48 @@ export class AuthController {
             // })
 
             return { user: findUser, token }
+        }
+
+        return null
+    }
+
+    @Post('register')
+    async register(@Res({ passthrough: true }) res: ExtendedResponse, @Body() registroAuthDto: RegistroAuthDto) {
+        const createdUser = await this.prisma.usuario.create({
+            data: {
+                nombre: registroAuthDto.nombre.toUpperCase(),
+                grado: registroAuthDto.grado,
+                edad: +registroAuthDto.edad,
+                colegio: registroAuthDto.colegio.toUpperCase(),
+                preguntaSeguridadId: registroAuthDto.preguntaSeguridadId,
+                respuestaSeguridad: registroAuthDto.respuestaSeguridad.toUpperCase(),
+            },
+        })
+
+        let payload = {}
+
+        if (createdUser) {
+            payload = {
+                id: createdUser.id,
+                nombre: createdUser.nombre,
+                edad: createdUser.edad,
+                grado: createdUser.grado,
+                colegio: createdUser.colegio,
+                preguntaSeguridadId: createdUser.preguntaSeguridadId,
+                respuestaSeguridad: createdUser.respuestaSeguridad,
+            }
+
+            const token = this.jwtService.sign(payload)
+
+            // Set the JWT token as a cookie in the response
+            // res.cookie('accessToken', token, {
+            //     domain: process.env.NEXTJS_PUBLIC_DOMAIN, // Use the correct frontend domain here
+            //     sameSite: 'none',
+            //     httpOnly: true,
+            //     secure: true,
+            // })
+
+            return { user: createdUser, token }
         }
 
         return null
