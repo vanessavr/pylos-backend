@@ -3,18 +3,26 @@ import { RespuestaPruebaDiagnosticaService } from './respuesta-prueba-diagnostic
 import { CreateRespuestaPruebaDiagnosticaDto } from './dto/create-respuesta-prueba-diagnostica.dto'
 import { UpdateRespuestaPruebaDiagnosticaDto } from './dto/update-respuesta-prueba-diagnostica.dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
-import { UseGuards } from '@nestjs/common/decorators'
+import { Req, UseGuards } from '@nestjs/common/decorators'
 import { AuthGuard } from 'src/auth/jwt-auth.guard'
+import { AuthService } from 'src/auth/auth.service'
 
 @ApiTags('Respuesta de prueba diagnóstica')
 @Controller('respuesta-prueba-diagnostica')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 export class RespuestaPruebaDiagnosticaController {
-    constructor(private readonly respuestaPruebaDiagnosticaService: RespuestaPruebaDiagnosticaService) {}
+    constructor(
+        private readonly authService: AuthService,
+        private readonly respuestaPruebaDiagnosticaService: RespuestaPruebaDiagnosticaService,
+    ) {}
 
     @Post()
-    create(@Body() createRespuestaPruebaDiagnosticaDto: CreateRespuestaPruebaDiagnosticaDto) {
+    async create(@Req() req: Request, @Body() createRespuestaPruebaDiagnosticaDto: CreateRespuestaPruebaDiagnosticaDto) {
+        const response = await this.authService.getUserFromToken(req)
+
+        createRespuestaPruebaDiagnosticaDto.usuarioId = response?.id
+
         return this.respuestaPruebaDiagnosticaService.create(createRespuestaPruebaDiagnosticaDto)
     }
 
