@@ -28,6 +28,7 @@ model PreguntaPruebaDiagnostica {
   pregunta                  String    
   esPreguntaCerrada         Boolean?                        @default(true)
   opcionPruebaDiagnostica   OpcionPruebaDiagnostica[]           
+  respuestaPruebaDiagnostica   RespuestaPruebaDiagnostica[]           
   createdAt                 DateTime?                       @default(now())
   updatedAt                 DateTime?                       @updatedAt
 }
@@ -63,8 +64,10 @@ model RespuestaPruebaDiagnostica {
   respuesta                   String?
   usuarioId                   String                        @db.Uuid
   usuario                     Usuario                       @relation(fields: [usuarioId], references: [id])
-  opcionPruebaDiagnosticaId   String                        @db.Uuid
-  opcionPruebaDiagnostica     OpcionPruebaDiagnostica       @relation(fields: [opcionPruebaDiagnosticaId], references: [id])
+  opcionPruebaDiagnosticaId   String?                       @db.Uuid
+  opcionPruebaDiagnostica     OpcionPruebaDiagnostica?      @relation(fields: [opcionPruebaDiagnosticaId], references: [id])
+  preguntaPruebaDiagnosticaId String                        @db.Uuid
+  preguntaPruebaDiagnostica   PreguntaPruebaDiagnostica     @relation(fields: [preguntaPruebaDiagnosticaId], references: [id])
   createdAt                   DateTime?                     @default(now())
   updatedAt                   DateTime?                     @updatedAt
 }

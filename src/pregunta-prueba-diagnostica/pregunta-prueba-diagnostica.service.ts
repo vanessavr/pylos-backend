@@ -55,13 +55,9 @@ export class PreguntaPruebaDiagnosticaService {
         return this.prisma.preguntaPruebaDiagnostica.findMany({
             where: {
                 NOT: {
-                    opcionPruebaDiagnostica: {
+                    respuestaPruebaDiagnostica: {
                         some: {
-                            respuestaPruebaDiagnostica: {
-                                some: {
-                                    usuarioId: usuarioId,
-                                },
-                            },
+                            usuarioId: usuarioId,
                         },
                     },
                 },

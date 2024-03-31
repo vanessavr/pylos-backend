@@ -22,6 +22,7 @@ export class RespuestaPruebaDiagnosticaController {
         const response = await this.authService.getUserFromToken(req)
 
         createRespuestaPruebaDiagnosticaDto.usuarioId = response?.id
+        createRespuestaPruebaDiagnosticaDto.respuesta = createRespuestaPruebaDiagnosticaDto.respuesta.toUpperCase()
 
         return this.respuestaPruebaDiagnosticaService.create(createRespuestaPruebaDiagnosticaDto)
     }

@@ -12,6 +12,9 @@ export class CreateRespuestaPruebaDiagnosticaDto {
     usuarioId: string
 
     @ApiProperty()
-    @IsNotEmpty()
     opcionPruebaDiagnosticaId: string
+
+    @ApiProperty()
+    @IsNotEmpty()
+    preguntaPruebaDiagnosticaId: string
 }
