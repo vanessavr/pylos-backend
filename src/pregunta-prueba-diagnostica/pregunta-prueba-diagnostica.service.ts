@@ -14,7 +14,16 @@ export class PreguntaPruebaDiagnosticaService {
     }
 
     findAll() {
-        return this.prisma.preguntaPruebaDiagnostica.findMany()
+        return this.prisma.preguntaPruebaDiagnostica.findMany({
+            include: {
+                opcionPruebaDiagnostica: {
+                    select: {
+                        id: true,
+                        opcion: true,
+                    },
+                },
+            },
+        })
     }
 
     findOne(id: string) {
