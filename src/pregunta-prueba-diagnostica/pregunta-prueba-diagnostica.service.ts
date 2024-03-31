@@ -50,4 +50,30 @@ export class PreguntaPruebaDiagnosticaService {
             },
         })
     }
+
+    async findAllWithoutRespuesta(usuarioId: string) {
+        return this.prisma.preguntaPruebaDiagnostica.findMany({
+            where: {
+                NOT: {
+                    opcionPruebaDiagnostica: {
+                        some: {
+                            respuestaPruebaDiagnostica: {
+                                some: {
+                                    usuarioId: usuarioId,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            include: {
+                opcionPruebaDiagnostica: {
+                    select: {
+                        id: true,
+                        opcion: true,
+                    },
+                },
+            },
+        })
+    }
 }

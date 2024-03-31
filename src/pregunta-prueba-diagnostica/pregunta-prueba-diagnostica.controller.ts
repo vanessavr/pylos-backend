@@ -3,15 +3,19 @@ import { PreguntaPruebaDiagnosticaService } from './pregunta-prueba-diagnostica.
 import { CreatePreguntaPruebaDiagnosticaDto } from './dto/create-pregunta-prueba-diagnostica.dto'
 import { UpdatePreguntaPruebaDiagnosticaDto } from './dto/update-pregunta-prueba-diagnostica.dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
-import { UseGuards } from '@nestjs/common/decorators'
+import { Req, UseGuards } from '@nestjs/common/decorators'
 import { AuthGuard } from 'src/auth/jwt-auth.guard'
+import { AuthService } from 'src/auth/auth.service'
 
 @ApiTags('Pregunta de prueba diagnóstica')
 @Controller('pregunta-prueba-diagnostica')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 export class PreguntaPruebaDiagnosticaController {
-    constructor(private readonly preguntaPruebaDiagnosticaService: PreguntaPruebaDiagnosticaService) {}
+    constructor(
+        private readonly authService: AuthService,
+        private readonly preguntaPruebaDiagnosticaService: PreguntaPruebaDiagnosticaService,
+    ) {}
 
     @Post()
     create(@Body() createPreguntaPruebaDiagnosticaDto: CreatePreguntaPruebaDiagnosticaDto) {
@@ -36,5 +40,12 @@ export class PreguntaPruebaDiagnosticaController {
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.preguntaPruebaDiagnosticaService.remove(id)
+    }
+
+    @Get('/preguntas/usuario')
+    async findAllWithoutRespuesta(@Req() req: Request) {
+        const response = await this.authService.getUserFromToken(req)
+
+        return this.preguntaPruebaDiagnosticaService.findAllWithoutRespuesta(response?.id)
     }
 }
