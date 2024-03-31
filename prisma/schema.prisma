@@ -61,9 +61,9 @@ model Usuario {
 model RespuestaPruebaDiagnostica {
   id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   respuesta                   String?
-  usuarioId                   String                        @unique @db.Uuid
+  usuarioId                   String                        @db.Uuid
   usuario                     Usuario                       @relation(fields: [usuarioId], references: [id])
-  opcionPruebaDiagnosticaId   String                        @unique @db.Uuid
+  opcionPruebaDiagnosticaId   String                        @db.Uuid
   opcionPruebaDiagnostica     OpcionPruebaDiagnostica       @relation(fields: [opcionPruebaDiagnosticaId], references: [id])
   createdAt                   DateTime?                     @default(now())
   updatedAt                   DateTime?                     @updatedAt
