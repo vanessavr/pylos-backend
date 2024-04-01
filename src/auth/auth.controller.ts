@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res } from '@nestjs/common'
+import { Controller, Post, Body, Res, HttpException, HttpStatus, UseFilters } from '@nestjs/common'
 import { LoginAuthDto } from './dto/login-auth.dto'
 import { ApiTags } from '@nestjs/swagger'
 import { JwtService } from '@nestjs/jwt'
@@ -20,39 +20,33 @@ export class AuthController {
     ) {}
 
     @Post('login')
-    async login(@Res({ passthrough: true }) res: ExtendedResponse, @Body() loginAuthDto: LoginAuthDto) {
-        const { nombreUsuario, mascotaNombre } = await loginAuthDto
+    async login(@Res({ passthrough: true }) res: Response, @Body() loginAuthDto: LoginAuthDto) {
+        const { nombreUsuario, mascotaNombre } = loginAuthDto
 
-        const findUser = await this.prisma.usuario.findFirst({ where: { nombreUsuario: nombreUsuario.toUpperCase(), mascotaNombre: mascotaNombre.toUpperCase() } })
+        const findUser = await this.prisma.usuario.findFirst({
+            where: { nombreUsuario: nombreUsuario.toUpperCase(), mascotaNombre: mascotaNombre.toUpperCase() },
+        })
 
-        let payload = {}
-
-        if (findUser) {
-            payload = {
-                id: findUser.id,
-                nombre: findUser.nombre,
-                nombreUsuario: findUser.nombreUsuario,
-                edad: findUser.edad,
-                grado: findUser.grado,
-                colegio: findUser.colegio,
-                mascotaId: findUser.mascotaId,
-                mascotaNombre: findUser.mascotaNombre,
-            }
-
-            const token = this.jwtService.sign(payload)
-
-            // Set the JWT token as a cookie in the response
-            // res.cookie('accessToken', token, {
-            //     domain: process.env.NEXTJS_PUBLIC_DOMAIN, // Use the correct frontend domain here
-            //     sameSite: 'none',
-            //     httpOnly: true,
-            //     secure: true,
-            // })
-
-            return { user: findUser, token }
+        if (!findUser) {
+            // Si no se encuentra el usuario, devolver un error 400 con un mensaje personalizado
+            throw new HttpException('Credenciales inválidas', HttpStatus.BAD_REQUEST)
         }
 
-        return null
+        // Si se encuentra el usuario, generar el token JWT
+        const payload = {
+            id: findUser.id,
+            nombre: findUser.nombre,
+            nombreUsuario: findUser.nombreUsuario,
+            edad: findUser.edad,
+            grado: findUser.grado,
+            colegio: findUser.colegio,
+            mascotaId: findUser.mascotaId,
+            mascotaNombre: findUser.mascotaNombre,
+        }
+        const token = this.jwtService.sign(payload)
+
+        // Devolver el usuario y el token en el cuerpo de la respuesta
+        return res.status(HttpStatus.OK).json({ user: findUser, token })
     }
 
     @Post('register')
