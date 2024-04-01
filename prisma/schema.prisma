@@ -47,7 +47,7 @@ model OpcionPruebaDiagnostica {
 model Usuario {
   id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nombre                      String                        @db.VarChar(60)
-  nombreUsuario               String                        @db.VarChar(15)
+  nombreUsuario               String                        @unique @db.VarChar(15)
   edad                        Int                           @db.Integer
   grado                       String                        @db.VarChar(2)
   colegio                     String                        @db.VarChar(60)
